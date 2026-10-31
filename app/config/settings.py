@@ -140,3 +140,5 @@ DATABASES = {
         "PORT": os.environ.get("POSTGRES_PORT", "5432"),
     }
 }
+
+INSTALLED_APPS += ["clinic"]
