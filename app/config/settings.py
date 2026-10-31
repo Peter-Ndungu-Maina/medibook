@@ -142,3 +142,6 @@ DATABASES = {
 }
 
 INSTALLED_APPS += ["clinic"]
+
+STATIC_URL = "/static/"
+STATIC_ROOT = os.environ.get("STATIC_ROOT", "/static")
