@@ -1,0 +1,24 @@
+Run python manage.py test
+Creating test database for alias 'default'...
+FF..
+======================================================================
+FAIL: test_cancelled_slot_can_be_rebooked (clinic.tests.AppointmentApiTests.test_cancelled_slot_can_be_rebooked)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/runner/work/medibook/medibook/app/clinic/tests.py", line 38, in test_cancelled_slot_can_be_rebooked
+    self.assertEqual(again.status_code, status.HTTP_200_OK)
+AssertionError: 201 != 200
+======================================================================
+FAIL: test_create_appointment (clinic.tests.AppointmentApiTests.test_create_appointment)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/runner/work/medibook/medibook/app/clinic/tests.py", line 25, in test_create_appointment
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+AssertionError: 201 != 200
+----------------------------------------------------------------------
+Ran 4 tests in 0.060s
+FAILED (failures=2)
+Destroying test database for alias 'default'...
+Found 4 test(s).
+System check identified no issues (0 silenced).
+Error: Process completed with exit code 1.
