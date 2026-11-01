@@ -130,7 +130,7 @@ Full logs: [failing run](docs/ci-logs/ci-red.txt) and [passing run](docs/ci-logs
 - [x] Docker and Docker Compose
 - [x] Production setup: gunicorn, NGINX, multi-stage Dockerfile, non-root user
 - [x] CI pipeline with tests and image build
-- [ ] Ansible playbooks to provision and harden a server
+- [x] Ansible playbooks: deploy the app, harden SSH (firewall and Docker install still to do on a cloud VM)
 - [ ] Terraform for cloud infrastructure
 - [ ] Kubernetes deployment (probes, secrets, CronJob for backups)
 - [ ] Monitoring with Prometheus and Grafana, error tracking with Sentry
