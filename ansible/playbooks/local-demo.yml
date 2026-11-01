@@ -1,0 +1,25 @@
+- name: Learn Ansible on my own machine
+  hosts: local
+  become: true
+  tasks:
+    - name: Install useful tools
+      ansible.builtin.apt:
+        name:
+          - htop
+          - tree
+          - curl
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Create a demo directory
+      ansible.builtin.file:
+        path: /opt/medibook-demo
+        state: directory
+        mode: "0755"
+
+    - name: Write a welcome file
+      ansible.builtin.copy:
+        dest: /opt/medibook-demo/hello.txt
+        content: "Managed by Ansible\n"
+        mode: "0644"
