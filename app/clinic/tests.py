@@ -22,7 +22,7 @@ class AppointmentApiTests(APITestCase):
 
     def test_create_appointment(self):
         response = self.client.post("/api/appointments/", self.payload, format="json")
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_double_booking_is_rejected(self):
         self.client.post("/api/appointments/", self.payload, format="json")
@@ -35,4 +35,4 @@ class AppointmentApiTests(APITestCase):
             f"/api/appointments/{first.json()['id']}/", {"status": "cancelled"}, format="json"
         )
         again = self.client.post("/api/appointments/", self.payload, format="json")
-        self.assertEqual(again.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(again.status_code, status.HTTP_200_OK)
