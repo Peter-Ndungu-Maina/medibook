@@ -1,0 +1,66 @@
+- name: Deploy MediBook
+  hosts: servers
+  vars:
+    app_dir: /opt/medibook
+    repo_url: https://github.com/Peter-Ndungu-Maina/medibook.git
+    # Generated once, then stored on the control machine (not in Git)
+    postgres_password: "{{ lookup('ansible.builtin.password', playbook_dir + '/../.secrets/postgres_password length=24 chars=ascii_letters,digits') }}"
+    django_secret_key: "{{ lookup('ansible.builtin.password', playbook_dir + '/../.secrets/django_secret_key length=50 chars=ascii_letters,digits') }}"
+
+  tasks:
+    - name: Install git and curl
+      ansible.builtin.apt:
+        name: [git, curl]
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+      become: true
+
+    - name: Let the deploy user talk to Docker
+      ansible.builtin.user:
+        name: deploy
+        groups: docker
+        append: true
+      become: true
+
+    - name: Reconnect so the new group applies
+      ansible.builtin.meta: reset_connection
+
+    - name: Create the application directory
+      ansible.builtin.file:
+        path: "{{ app_dir }}"
+        state: directory
+        owner: deploy
+        group: deploy
+        mode: "0755"
+      become: true
+
+    - name: Fetch the code from GitHub
+      ansible.builtin.git:
+        repo: "{{ repo_url }}"
+        dest: "{{ app_dir }}"
+        version: main
+
+    - name: Write the environment file
+      ansible.builtin.template:
+        src: ../templates/env.j2
+        dest: "{{ app_dir }}/.env"
+        mode: "0600"
+
+    - name: Start the production stack
+      community.docker.docker_compose_v2:
+        project_src: "{{ app_dir }}"
+        project_name: medibook-lab
+        files:
+          - docker-compose.prod.yml
+        build: always
+        state: present
+
+    - name: Wait until the app reports healthy
+      ansible.builtin.uri:
+        url: http://localhost:8080/health/
+        return_content: true
+      register: health
+      until: health.status == 200
+      retries: 20
+      delay: 5
